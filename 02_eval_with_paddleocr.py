@@ -1,6 +1,12 @@
 # coding: utf-8
 import os
+
+# Set MKL environment variables before any imports to avoid runtime errors
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
+os.environ['MKL_NUM_THREADS'] = '1'
+os.environ['NUMEXPR_NUM_THREADS'] = '1'
+os.environ['OMP_NUM_THREADS'] = '1'
+os.environ['MKL_THREADING_LAYER'] = 'GNU'
 
 import argparse
 from pathlib import Path

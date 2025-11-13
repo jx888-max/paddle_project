@@ -12,13 +12,19 @@ This project evaluates PaddleOCR performance on various language datasets.
 ### 1. Intel MKL Load Error Fix (Python 3.9)
 **Issue**: `Intel MKL function load error: cpu specific dynamic library is not loaded.`
 
-**Solution**: Added environment variable at the top of the script:
+**Root Cause**: MKL threading library conflicts occur both at import time and during runtime inference.
+
+**Solution**: Added comprehensive MKL environment variables at the top of the script:
 ```python
 import os
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
+os.environ['MKL_NUM_THREADS'] = '1'
+os.environ['NUMEXPR_NUM_THREADS'] = '1'
+os.environ['OMP_NUM_THREADS'] = '1'
+os.environ['MKL_THREADING_LAYER'] = 'GNU'
 ```
 
-This must be set **before** importing numpy, pandas, or paddleocr.
+**Critical**: These must be set **before** importing numpy, pandas, paddle, or paddleocr.
 
 ### 2. DeprecationWarning Fix
 **Issue**: `DeprecationWarning: Please use 'predict' instead.`
